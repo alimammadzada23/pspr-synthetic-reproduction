@@ -63,11 +63,11 @@ Result: synthetic two-port interferometer images are created. These images act a
 
 ### Step 1 outputs
 
-![Theta scan images](figures/step1_theta_scan_images.png)
+![Theta scan images](figures:step1_mean_image_true_phase.png)
 
-![Mean image and true phase](figures/step1_mean_image_true_phase.png)
+![Mean image and true phase](figures:step1_theta_scan_phase.png)
 
-![Three phase patterns](figures/step1_three_phase_patterns.png)
+![Three phase patterns](figures:step1_three_phase_pattern.png)
 
 ---
 
@@ -91,7 +91,7 @@ Result: the reconstruction error is close to numerical precision, around `10^-15
 
 ### Step 2 output
 
-![Noise-free PSPR reconstruction](figures/step2_noise_free_reconstruction.png)
+![Noise-free PSPR reconstruction](step2_noise_free_reconstruction.png)
 
 ---
 
@@ -154,13 +154,13 @@ figures/fig7_pixel_phase_error.png
 ```
 ### Step 3 outputs
 
-![Figure 5: atom number scaling](figures/step3_fig5_atom_number_scaling.png)
+![Figure 5: atom number scaling](step3_fig5_atom_number_scaling.png)
 
-![Figure 6: image number scaling](figures/step3_fig6_1_image_number_scaling.png)
+![Figure 6: image number scaling](step3_fig6_1_image_number_scaling.png)
 
-![Figure 6: image number scaling](figures/step3_fig6_2_image_number_scaling.png)
+![Figure 6: image number scaling](step3_fig6_2_image_number_scaling.png)
 
-![Figure 7: pixel phase error](figures/step3_fig7_pixel_phase_error.png)
+![Figure 7: pixel phase error](step3_fig7_pixel_phase_error.png)
 ---
 
 ## Notes
