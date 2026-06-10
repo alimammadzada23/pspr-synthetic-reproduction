@@ -63,11 +63,11 @@ Result: synthetic two-port interferometer images are created. These images act a
 
 ### Step 1 outputs
 
-![Theta scan images] (figures:step1_mean_image_true_phase.png)
+![Theta scan images](figures:step1_mean_image_true_phase.png)
 
-![Mean image and true phase] (figures:step1_theta_scan_images.png)
+![Mean image and true phase](figures:step1_theta_scan_images.png)
 
-![Three phase patterns] (figures:step1_three_phase_patterns.png)
+![Three phase patterns](figures:step1_three_phase_patterns.png)
 
 ---
 
