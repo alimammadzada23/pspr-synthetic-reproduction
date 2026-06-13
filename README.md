@@ -5,7 +5,7 @@ This repository is a synthetic-data reproduction of the method described in:
 **Spatially resolved phase reconstruction for atom interferometry**
 Seckmeyer et al., *EPJ Quantum Technology*, 2025.
 
-The goal is not to reproduce the full experimental part of the paper. The experimental atom-gravimeter image datasets are not publicly included with the paper. Instead, this repository reproduces the **synthetic-data workflow** using the image model described in the paper.
+The goal is not to reproduce the full experimental part of the paper. The experimental atom-gravimeter image datasets are not publicly included with the paper. Instead, this repository reproduces the synthetic-data workflow using the mathematical image model described in the paper.
 
 The project generates artificial two-port atom-interferometer images, applies PCA-based spatial phase reconstruction, and tests the effect of atom shot noise on the reconstructed phase.
 
@@ -15,7 +15,7 @@ The project generates artificial two-port atom-interferometer images, applies PC
 
 Atom interferometers usually measure a global phase. However, atom-cloud images can also contain spatially varying phase information across the cloud.
 
-The goal of PSPR, or **spatially resolved phase reconstruction**, is to reconstruct the spatial phase map
+The goal of PSPR, or **spatially resolved phase reconstruction**, is to reconstruct the spatial phase map:
 
 $$
 \gamma(x,y)
@@ -23,11 +23,13 @@ $$
 
 from a stack of interferometer images.
 
-In this synthetic reproduction, the true phase map is known in advance. This allows us to test whether the PCA-based reconstruction pipeline can recover the input phase map correctly.
+In this synthetic reproduction, the true spatial phase map is known in advance. This allows us to test whether the PCA-based reconstruction pipeline can recover the input phase map correctly.
 
 ---
 
 ## Installation
+
+Install the required packages with:
 
 ```bash
 pip install -r requirements.txt
@@ -47,7 +49,7 @@ scikit-image
 
 ## How to run
 
-Open
+Open the notebook:
 
 ```text
 pspr_synthetic_reproduction.ipynb
@@ -57,7 +59,15 @@ in Google Colab or Jupyter Notebook and run all cells.
 
 The notebook generates synthetic interferometer images, applies PCA-based spatial phase reconstruction, adds atom shot noise, and produces the figures shown below.
 
-If the PNG files are stored in a `figures/` folder, update the image paths accordingly, for example:
+The image paths in this README assume that the PNG files are in the same directory as the README. If the figures are stored inside a `figures` folder, update the image links accordingly.
+
+Example:
+
+```text
+step1_mean_image_true_phase.png
+```
+
+becomes:
 
 ```text
 figures/step1_mean_image_true_phase.png
@@ -67,10 +77,10 @@ figures/step1_mean_image_true_phase.png
 
 # Method overview
 
-The synthetic image stack is generated from the interferometer image model
+The synthetic image stack is generated from the interferometer image model:
 
 $$
-I_i(x,y)=A(x,y)+B(x,y)\cos\left(\theta_i+\gamma(x,y)\right).
+I_i(x,y)=A(x,y)+B(x,y)\cos\left(\theta_i+\gamma(x,y)\right)
 $$
 
 Here:
@@ -81,23 +91,41 @@ Here:
 * $\theta_i$ is the global interferometer phase of image $i$.
 * $\gamma(x,y)$ is the spatial phase pattern to be reconstructed.
 
-The key identity is
+The key trigonometric identity is:
 
 $$
 \cos\left(\theta_i+\gamma(x,y)\right)
+=====================================
+
+## \cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
+
+\sin\left(\theta_i\right)\sin\left(\gamma(x,y)\right)
 $$
 
-$$
-\cos\theta_i \cos\gamma(x,y)
-$$
+Using this identity, the mean-subtracted image can be written as:
 
 $$
-\sin\theta_i \sin\gamma(x,y).
+I_i(x,y)-A(x,y)
+===============
+
+## B(x,y)\cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
+
+B(x,y)\sin\left(\theta_i\right)\sin\left(\gamma(x,y)\right)
 $$
 
-Therefore, after subtracting the mean image, the image stack mainly varies in two dimensions: one cosine-like mode and one sine-like mode.
+This shows that the image stack mainly varies through two scalar quantities:
 
-This is why PCA can be used to extract the two dominant fringe modes from the image sequence.
+$$
+\cos\left(\theta_i\right)
+$$
+
+and
+
+$$
+\sin\left(\theta_i\right)
+$$
+
+Therefore, the ideal synthetic image stack is approximately two-dimensional after mean subtraction. PCA can recover these two dominant fringe modes.
 
 The reconstruction pipeline is:
 
@@ -107,41 +135,47 @@ synthetic image stack
 → PCA decomposition with two components
 → ellipse correction of PCA scores
 → arctan2 phase extraction
-→ reconstructed global phases θ_i
-→ reconstructed spatial phase map γ(x,y)
+→ reconstructed global phases
+→ reconstructed spatial phase map
 ```
 
 ---
 
 # Step 1: Synthetic data generation
 
-In Step 1, synthetic atom-interferometer images are generated using
+In Step 1, synthetic atom-interferometer images are generated using:
 
 $$
-I_i(x,y)=A(x,y)+B(x,y)\cos\left(\theta_i+\gamma(x,y)\right).
+I_i(x,y)=A(x,y)+B(x,y)\cos\left(\theta_i+\gamma(x,y)\right)
 $$
 
-The phase $\theta_i$ changes from image to image and represents the global interferometer phase scan.
+The global phase $\theta_i$ changes from image to image. It represents the interferometer phase scan.
 
-The phase $\gamma(x,y)$ changes across the image and represents the spatial phase pattern that the algorithm should reconstruct.
+The spatial phase $\gamma(x,y)$ changes across the image. This is the phase map that the algorithm should reconstruct.
 
 Three spatial phase patterns are tested:
 
 $$
-\gamma_1(x,y)=2x^2+4y,
+\gamma_1(x,y)=2x^2+4y
 $$
 
 $$
-\gamma_2(x,y)=4x+4y,
+\gamma_2(x,y)=4x+4y
 $$
 
 $$
-\gamma_3(x,y)=4(0.2x)^2+2y.
+\gamma_3(x,y)=4(0.2x)^2+2y
 $$
 
-The synthetic images are two-port interferometer images. The two output ports are modelled as separated atom clouds. A relative $\pi$ phase shift is included between the two ports so that they are complementary, as expected for an atom interferometer.
+The synthetic images are two-port interferometer images. The two output ports are modelled as separated atom clouds.
 
-This means that when one port is bright, the other port is dark.
+A relative phase shift is included between the two output ports:
+
+$$
+\pi
+$$
+
+This makes the two ports complementary, as expected for an atom interferometer. When one port is bright, the other port is dark.
 
 ---
 
@@ -157,7 +191,7 @@ This means that when one port is bright, the other port is dark.
 
 ### Three tested phase patterns
 
-![Three phase patterns](step1_three_phase_patterns.png)
+![Three tested phase patterns](step1_three_phase_patterns.png)
 
 ---
 
@@ -165,44 +199,49 @@ This means that when one port is bright, the other port is dark.
 
 In Step 2, the synthetic images are reconstructed without atom shot noise.
 
-First, each image is flattened into a vector. A stack of images becomes a data matrix with shape
+First, each image is flattened into a vector. A stack of images becomes a data matrix with shape:
 
 $$
-N_{\mathrm{images}}\times N_{\mathrm{pixels}}.
+N_{\mathrm{images}}\times N_{\mathrm{pixels}}
 $$
 
 After subtracting the mean image, PCA is applied to extract the two dominant components.
 
-Using
+The reason this works is the identity:
 
 $$
 \cos\left(\theta_i+\gamma(x,y)\right)
+=====================================
+
+## \cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
+
+\sin\left(\theta_i\right)\sin\left(\gamma(x,y)\right)
 $$
 
-$$
-\cos\theta_i \cos\gamma(x,y)
-$$
-
-$$
-\sin\theta_i \sin\gamma(x,y),
-$$
-
-the mean-subtracted image can be written as
+Using this identity, the mean-subtracted image is:
 
 $$
 I_i(x,y)-A(x,y)
+===============
+
+## B(x,y)\cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
+
+B(x,y)\sin\left(\theta_i\right)\sin\left(\gamma(x,y)\right)
 $$
 
-$$
-B(x,y)\cos\theta_i\cos\gamma(x,y)
-$$
-
+So the changing part of the image stack is controlled by two terms:
 
 $$
-B(x,y)\sin\theta_i\sin\gamma(x,y).
+\cos\left(\theta_i\right)
 $$
 
-This shows that the image variation is approximately two-dimensional. PCA therefore recovers two modes corresponding to the sine-like and cosine-like fringe components.
+and
+
+$$
+\sin\left(\theta_i\right)
+$$
+
+That is why two PCA components are enough for the ideal synthetic data.
 
 ---
 
@@ -211,37 +250,51 @@ This shows that the image variation is approximately two-dimensional. PCA theref
 For each image, PCA gives two coefficients:
 
 $$
-w_{i,1}, \qquad w_{i,2}.
+w_{i,1}
 $$
 
-Ideally, these coefficients should lie on a circle as $\theta_i$ is scanned. In practice, PCA can rotate and scale the two components, so the points often form an ellipse instead of a perfect circle.
+and
 
-Therefore, an ellipse correction is applied to map the PCA scores back to a circle.
+$$
+w_{i,2}
+$$
 
-After ellipse correction, the global phase of each image is reconstructed as
+Ideally, these two coefficients should lie on a circle as the global phase is scanned.
+
+In practice, PCA can rotate and scale the two recovered components. Therefore, the score points often form an ellipse instead of a perfect circle.
+
+The ellipse correction maps the PCA scores back to a circle.
+
+After ellipse correction, the global phase of each image is reconstructed as:
 
 $$
 \theta_i^{\mathrm{rec}}
+=======================
+
+\operatorname{atan2}\left(w_{i,2},w_{i,1}\right)
 $$
 
-$$
-\operatorname{atan2}\left(w_{i,2},w_{i,1}\right).
-$$
-
-The spatial phase map is reconstructed from the corrected PCA components $P_1(x,y)$ and $P_2(x,y)$ as
+The spatial phase map is reconstructed from the corrected PCA components $P_1(x,y)$ and $P_2(x,y)$ as:
 
 $$
 \gamma^{\mathrm{rec}}(x,y)
+==========================
+
+\operatorname{atan2}\left(P_2(x,y),P_1(x,y)\right)
 $$
 
-$$
-\operatorname{atan2}\left(P_2(x,y),P_1(x,y)\right).
-$$
+Because the input data is noise-free, the reconstructed phase should match the true phase almost exactly.
 
-Because the input data is noise-free, the reconstructed phase should match the true phase almost exactly. In the notebook, the noise-free reconstruction error is close to numerical precision, typically around
+In the notebook, the noise-free reconstruction error is close to numerical precision, typically around:
 
 $$
-10^{-15}\text{ to }10^{-16}\ \mathrm{rad}.
+10^{-15}\ \mathrm{rad}
+$$
+
+to:
+
+$$
+10^{-16}\ \mathrm{rad}
 $$
 
 ---
@@ -256,7 +309,9 @@ $$
 
 In Step 3, atom shot noise is added to the synthetic images.
 
-The noise-free image intensity is treated as a probability distribution. Then a fixed number of atoms is randomly sampled into pixels. This converts an ideal smooth image into a noisy atom-count image.
+The noise-free image intensity is treated as a probability distribution. Then a fixed number of atoms is randomly sampled into pixels.
+
+This converts an ideal smooth image into a noisy atom-count image.
 
 The noisy images are then analyzed with the same PSPR reconstruction pipeline:
 
@@ -272,13 +327,13 @@ noisy atom-count images
 
 ## Atom shot noise
 
-If the total number of atoms is $N_{\mathrm{atoms}}$, the relative atom shot noise scales approximately as
+If the total number of atoms is $N_{\mathrm{atoms}}$, the relative atom shot noise scales approximately as:
 
 $$
-\frac{1}{\sqrt{N_{\mathrm{atoms}}}}.
+\frac{1}{\sqrt{N_{\mathrm{atoms}}}}
 $$
 
-Therefore, using more atoms improves the reconstruction accuracy.
+Therefore, using more atoms improves the phase reconstruction accuracy.
 
 ---
 
@@ -286,15 +341,18 @@ Therefore, using more atoms improves the reconstruction accuracy.
 
 In this test, the number of atoms per image is varied.
 
-The expected scaling is
+The expected scaling is:
 
 $$
 \max(\sigma_i)
 \propto
-\frac{1}{\sqrt{N_{\mathrm{atoms}}}}.
+\frac{1}{\sqrt{N_{\mathrm{atoms}}}}
 $$
 
-Here, $\sigma_i$ is the uncertainty of the reconstructed image phase and $N_{\mathrm{atoms}}$ is the number of atoms per image.
+Here:
+
+* $\sigma_i$ is the uncertainty of the reconstructed image phase.
+* $N_{\mathrm{atoms}}$ is the number of atoms per image.
 
 The expected result is that more atoms reduce the phase error.
 
@@ -326,12 +384,12 @@ This means that, beyond some point, adding more images does not strongly improve
 
 In this test, the spatial phase error is analyzed pixel by pixel.
 
-The expected scaling is
+The expected scaling is:
 
 $$
 \sigma_{xy}
 \propto
-\frac{1}{\sqrt{n_{\mathrm{images}}\bar{I}(x,y)}}.
+\frac{1}{\sqrt{n_{\mathrm{images}}\bar{I}(x,y)}}
 $$
 
 Here:
@@ -340,7 +398,9 @@ Here:
 * $n_{\mathrm{images}}$ is the number of images.
 * $\bar{I}(x,y)$ is the average atom count at pixel $(x,y)$.
 
-This means that pixels with more atoms have lower phase error, while low-density pixels have larger phase error. It also means that using more images reduces the pixel-wise phase error.
+This means that pixels with more atoms have lower phase error, while low-density pixels have larger phase error.
+
+It also means that using more images reduces the pixel-wise phase error.
 
 ![Figure 7: pixel phase error](step3_fig7_pixel_phase_error.png)
 
@@ -358,40 +418,40 @@ The main results are:
 
 3. Ellipse correction removes the arbitrary PCA scaling and rotation.
 
-4. The global image phases are reconstructed using
+4. The global image phases are reconstructed using:
 
 $$
 \theta_i^{\mathrm{rec}}
 =======================
 
-\operatorname{atan2}\left(w_{i,2},w_{i,1}\right).
+\operatorname{atan2}\left(w_{i,2},w_{i,1}\right)
 $$
 
-5. The spatial phase map is reconstructed using
+5. The spatial phase map is reconstructed using:
 
 $$
 \gamma^{\mathrm{rec}}(x,y)
 ==========================
 
-\operatorname{atan2}\left(P_2(x,y),P_1(x,y)\right).
+\operatorname{atan2}\left(P_2(x,y),P_1(x,y)\right)
 $$
 
 6. In the noise-free case, the reconstructed phase agrees with the known input phase to numerical precision.
 
-7. With atom shot noise, the reconstruction error follows the expected scaling
+7. With atom shot noise, the image-phase reconstruction error follows the expected scaling:
 
 $$
 \max(\sigma_i)
 \propto
-\frac{1}{\sqrt{N_{\mathrm{atoms}}}},
+\frac{1}{\sqrt{N_{\mathrm{atoms}}}}
 $$
 
-and the pixel-wise phase error follows
+8. The pixel-wise phase error follows the expected scaling:
 
 $$
 \sigma_{xy}
 \propto
-\frac{1}{\sqrt{n_{\mathrm{images}}\bar{I}(x,y)}}.
+\frac{1}{\sqrt{n_{\mathrm{images}}\bar{I}(x,y)}}
 $$
 
 ---
@@ -400,9 +460,9 @@ $$
 
 This repository reproduces only the synthetic-data part of the paper.
 
-The experimental atom-gravimeter image datasets are not included because they are not publicly available in the paper. The paper states that those datasets are available from the corresponding authors on reasonable request.
+The experimental atom-gravimeter image datasets are not included because they are not publicly available with the paper. The paper states that those datasets are available from the corresponding authors on reasonable request.
 
-The Monte Carlo results may not look exactly identical to the paper because the paper used a much larger number of simulation runs. This repository uses smaller run counts so the code can run on a normal laptop or Google Colab.
+The Monte Carlo results may not look exactly identical to the paper because the paper used a much larger number of simulation runs. This repository uses smaller run counts so the code can run on a normal laptop or in Google Colab.
 
 ---
 
