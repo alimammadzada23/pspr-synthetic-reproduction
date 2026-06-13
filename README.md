@@ -85,9 +85,13 @@ The key identity is
 
 $$
 \cos\left(\theta_i+\gamma(x,y)\right)
+$$
 
-## \cos\theta_i \cos\gamma(x,y)
+$$
+\cos\theta_i \cos\gamma(x,y)
+$$
 
+$$
 \sin\theta_i \sin\gamma(x,y).
 $$
 
@@ -173,10 +177,13 @@ Using
 
 $$
 \cos\left(\theta_i+\gamma(x,y)\right)
-=====================================
+$$
 
-## \cos\theta_i \cos\gamma(x,y)
+$$
+\cos\theta_i \cos\gamma(x,y)
+$$
 
+$$
 \sin\theta_i \sin\gamma(x,y),
 $$
 
@@ -184,10 +191,14 @@ the mean-subtracted image can be written as
 
 $$
 I_i(x,y)-A(x,y)
-===============
+$$
 
-## B(x,y)\cos\theta_i\cos\gamma(x,y)
+$$
+B(x,y)\cos\theta_i\cos\gamma(x,y)
+$$
 
+
+$$
 B(x,y)\sin\theta_i\sin\gamma(x,y).
 $$
 
@@ -211,8 +222,9 @@ After ellipse correction, the global phase of each image is reconstructed as
 
 $$
 \theta_i^{\mathrm{rec}}
-=======================
+$$
 
+$$
 \operatorname{atan2}\left(w_{i,2},w_{i,1}\right).
 $$
 
@@ -220,8 +232,9 @@ The spatial phase map is reconstructed from the corrected PCA components $P_1(x,
 
 $$
 \gamma^{\mathrm{rec}}(x,y)
-==========================
+$$
 
+$$
 \operatorname{atan2}\left(P_2(x,y),P_1(x,y)\right).
 $$
 
