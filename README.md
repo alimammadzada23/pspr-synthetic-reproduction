@@ -85,7 +85,6 @@ The key identity is
 
 $$
 \cos\left(\theta_i+\gamma(x,y)\right)
-=====================================
 
 ## \cos\theta_i \cos\gamma(x,y)
 
