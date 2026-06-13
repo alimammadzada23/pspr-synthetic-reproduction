@@ -66,7 +66,7 @@ step1_mean_image_true_phase.png
 to
 
 ```text
-figures/step1_mean_image_true_phase.png
+step1_theta_scan_images.png
 ```
 
 and similarly for the other images.
