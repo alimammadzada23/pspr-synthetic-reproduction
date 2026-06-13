@@ -1,8 +1,9 @@
+
 # PSPR Synthetic Data Reproduction
 
 This repository is a synthetic-data reproduction of the method described in:
 
-**Spatially resolved phase reconstruction for atom interferometry**
+**Spatially resolved phase reconstruction for atom interferometry**  
 Seckmeyer et al., *EPJ Quantum Technology*, 2025.
 
 The goal is not to reproduce the full experimental part of the paper. The experimental atom-gravimeter image datasets are not publicly included with the paper. Instead, this repository reproduces the synthetic-data workflow using the mathematical image model described in the paper.
@@ -85,20 +86,19 @@ $$
 
 Here:
 
-* $I_i(x,y)$ is the intensity at pixel position $(x,y)$ in image $i$.
-* $A(x,y)$ is the mean image background or density envelope.
-* $B(x,y)$ is the local fringe amplitude.
-* $\theta_i$ is the global interferometer phase of image $i$.
-* $\gamma(x,y)$ is the spatial phase pattern to be reconstructed.
+- $I_i(x,y)$ is the intensity at pixel position $(x,y)$ in image $i$.
+- $A(x,y)$ is the mean image background or density envelope.
+- $B(x,y)$ is the local fringe amplitude.
+- $\theta_i$ is the global interferometer phase of image $i$.
+- $\gamma(x,y)$ is the spatial phase pattern to be reconstructed.
 
 The key trigonometric identity is:
 
 $$
 \cos\left(\theta_i+\gamma(x,y)\right)
-=====================================
-
-## \cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
-
+=
+\cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
+-
 \sin\left(\theta_i\right)\sin\left(\gamma(x,y)\right)
 $$
 
@@ -106,10 +106,9 @@ Using this identity, the mean-subtracted image can be written as:
 
 $$
 I_i(x,y)-A(x,y)
-===============
-
-## B(x,y)\cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
-
+=
+B(x,y)\cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
+-
 B(x,y)\sin\left(\theta_i\right)\sin\left(\gamma(x,y)\right)
 $$
 
@@ -211,10 +210,9 @@ The reason this works is the identity:
 
 $$
 \cos\left(\theta_i+\gamma(x,y)\right)
-=====================================
-
-## \cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
-
+=
+\cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
+-
 \sin\left(\theta_i\right)\sin\left(\gamma(x,y)\right)
 $$
 
@@ -222,10 +220,9 @@ Using this identity, the mean-subtracted image is:
 
 $$
 I_i(x,y)-A(x,y)
-===============
-
-## B(x,y)\cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
-
+=
+B(x,y)\cos\left(\theta_i\right)\cos\left(\gamma(x,y)\right)
+-
 B(x,y)\sin\left(\theta_i\right)\sin\left(\gamma(x,y)\right)
 $$
 
@@ -269,8 +266,7 @@ After ellipse correction, the global phase of each image is reconstructed as:
 
 $$
 \theta_i^{\mathrm{rec}}
-=======================
-
+=
 \operatorname{atan2}\left(w_{i,2},w_{i,1}\right)
 $$
 
@@ -278,8 +274,7 @@ The spatial phase map is reconstructed from the corrected PCA components $P_1(x,
 
 $$
 \gamma^{\mathrm{rec}}(x,y)
-==========================
-
+=
 \operatorname{atan2}\left(P_2(x,y),P_1(x,y)\right)
 $$
 
@@ -351,8 +346,8 @@ $$
 
 Here:
 
-* $\sigma_i$ is the uncertainty of the reconstructed image phase.
-* $N_{\mathrm{atoms}}$ is the number of atoms per image.
+- $\sigma_i$ is the uncertainty of the reconstructed image phase.
+- $N_{\mathrm{atoms}}$ is the number of atoms per image.
 
 The expected result is that more atoms reduce the phase error.
 
@@ -394,9 +389,9 @@ $$
 
 Here:
 
-* $\sigma_{xy}$ is the phase error at pixel $(x,y)$.
-* $n_{\mathrm{images}}$ is the number of images.
-* $\bar{I}(x,y)$ is the average atom count at pixel $(x,y)$.
+- $\sigma_{xy}$ is the phase error at pixel $(x,y)$.
+- $n_{\mathrm{images}}$ is the number of images.
+- $\bar{I}(x,y)$ is the average atom count at pixel $(x,y)$.
 
 This means that pixels with more atoms have lower phase error, while low-density pixels have larger phase error.
 
@@ -422,8 +417,7 @@ The main results are:
 
 $$
 \theta_i^{\mathrm{rec}}
-=======================
-
+=
 \operatorname{atan2}\left(w_{i,2},w_{i,1}\right)
 $$
 
@@ -431,8 +425,7 @@ $$
 
 $$
 \gamma^{\mathrm{rec}}(x,y)
-==========================
-
+=
 \operatorname{atan2}\left(P_2(x,y),P_1(x,y)\right)
 $$
 
@@ -469,3 +462,4 @@ The Monte Carlo results may not look exactly identical to the paper because the 
 # License
 
 This repository is for educational and research reproduction purposes.
+
